@@ -46,7 +46,8 @@ module cbb_ecc_dec #(
     endgenerate
     assign  parity= ^din;
 
-    wire  [DW-1:0]   repair_bit;
+    wire  [DW+EW-1:0]   repair_bit;
+    //checking whether the repair is done on the data bits
     generate
         for ( genvar g = 0 ; g < DW; g ++ ) begin: gen_repair
             reg [EW-2:0] mask;
@@ -59,6 +60,13 @@ module cbb_ecc_dec #(
         end
     endgenerate
 
+    //checking whether the repair is done on the checking bit
+    generate
+        for ( genvar g = 0 ; g < EW -1 ;g ++ ) begin
+            assign  repair_bit[DW+g] = 1 << g;
+        end
+    endgenerate
+
     always @( posedge clk or negedge rst_n ) begin
         if ( ~rst_n ) begin
             dout    <= {DW{1'b0}};
@@ -66,9 +74,11 @@ module cbb_ecc_dec #(
             ded     <= 1'b0;
         end
         else begin
-            dout    <= din[0+:DW] ^ repair_bit;
-            ded     <= ~parity & (|syndrome); //no parity error means 2N bits are wrong ( N = 0, 1, 2 ), and syndrome is not all 0 means bits are wrong
-            sec     <= parity;
+            dout    <= din[0+:DW] ^ repair_bit[0+:DW];
+            //1. parity is ok, it means there are two bits error
+            //2. or the syndrome is non-zero but can't be associated with a certain repair location
+            ded     <= ( ~parity | ~|repair_bit ) & (|syndrome);
+            sec     <= parity & (|repair_bit );
         end
     end
 endmodule 
