@@ -1,4 +1,4 @@
-# secdec
+# secded
 Implement SECDEC code up to 256 bits data length
 # Directory structure
 ## sim
