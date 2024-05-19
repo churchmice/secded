@@ -49,7 +49,7 @@ module cbb_ecc_dec #(
     wire  [DW+EW-1:0]   repair_bit;
     //checking whether the repair is done on the data bits
     generate
-        for ( genvar g = 0 ; g < DW; g ++ ) begin: gen_repair
+        for ( genvar g = 0 ; g < DW; g ++ ) begin: gen_repair_data
             reg [EW-2:0] mask;
             always @( * ) begin
                 for ( int i = 0 ; i < EW-1; i ++ ) begin
@@ -62,7 +62,7 @@ module cbb_ecc_dec #(
 
     //checking whether the repair is done on the checking bit
     generate
-        for ( genvar g = 0 ; g < EW -1 ;g ++ ) begin
+        for ( genvar g = 0 ; g < EW -1 ;g ++ ) begin: gen_repair_parity
             assign  repair_bit[DW+g] = 1 << g;
         end
     endgenerate
