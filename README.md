@@ -1,5 +1,5 @@
 # secded
-Implement SECDEC code up to 256 bits data length
+Implement SECDEC code up to 256 bits data length based on hamming code and an additional parity bit.
 # Directory structure
 ## sim
 A simple testbench based on vcs and verdi
