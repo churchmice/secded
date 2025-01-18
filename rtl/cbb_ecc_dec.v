@@ -63,7 +63,7 @@ module cbb_ecc_dec #(
     //checking whether the repair is done on the checking bit
     generate
         for ( genvar g = 0 ; g < EW -1 ;g ++ ) begin: gen_repair_parity
-            assign  repair_bit[DW+g] = 1 << g;
+            assign  repair_bit[DW+g] = syndrome == (1 << g );
         end
     endgenerate
 
